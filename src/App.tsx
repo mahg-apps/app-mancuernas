@@ -6,6 +6,9 @@ import { ExerciseDetail } from './features/exercises/ExerciseDetail';
 import { ExerciseList } from './features/exercises/ExerciseList';
 import { Onboarding } from './features/onboarding/Onboarding';
 import { Settings } from './features/settings/Settings';
+import { RoutineEditor } from './features/routines/RoutineEditor';
+import { RoutinesPage } from './features/routines/RoutinesPage';
+import { Workout } from './features/workout/Workout';
 import { ProfileProvider, useProfile } from './state/ProfileContext';
 
 /** Lleva al asistente inicial si todavía no hay perfil. */
@@ -23,6 +26,15 @@ export default function App() {
       <HashRouter>
         <Routes>
           <Route path="/bienvenida" element={<Onboarding />} />
+          {/* Modo entrenamiento a pantalla completa, sin barra de navegación. */}
+          <Route
+            path="/entrenar/:id"
+            element={
+              <RequireProfile>
+                <Workout />
+              </RequireProfile>
+            }
+          />
           <Route
             element={
               <RequireProfile>
@@ -33,6 +45,8 @@ export default function App() {
             <Route index element={<BodyPage />} />
             <Route path="ejercicios" element={<ExerciseList />} />
             <Route path="ejercicio/:id" element={<ExerciseDetail />} />
+            <Route path="rutinas" element={<RoutinesPage />} />
+            <Route path="rutinas/:id" element={<RoutineEditor />} />
             <Route path="ajustes" element={<Settings />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>

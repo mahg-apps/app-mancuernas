@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { IconBody, IconDumbbell, IconList, IconSettings } from './Icons';
+import { IconBody, IconDumbbell, IconList, IconRoutine, IconSettings } from './Icons';
 
 interface NavItem {
   to: string;
@@ -9,10 +9,11 @@ interface NavItem {
   end?: boolean;
 }
 
-// Etapa 1: solo las secciones que ya existen. "Hoy", "Rutinas" y "Progreso" se suman después.
+// Etapa 1: solo las secciones que ya existen. "Hoy" y "Progreso" se suman después.
 const NAV: NavItem[] = [
   { to: '/', label: 'Cuerpo', icon: IconBody, end: true },
   { to: '/ejercicios', label: 'Ejercicios', icon: IconList },
+  { to: '/rutinas', label: 'Rutinas', icon: IconRoutine },
   { to: '/ajustes', label: 'Ajustes', icon: IconSettings },
 ];
 
