@@ -1,0 +1,137 @@
+[
+  {
+    "id": "press-pecho-banco",
+    "nombre": "Press de pecho en banco",
+    "zona": "pecho",
+    "musculosPrincipales": ["pecho"],
+    "musculosSecundarios": ["hombro_anterior", "triceps"],
+    "nivel": "principiante",
+    "tipo": "fuerza",
+    "equipo": ["mancuernas", "banco"],
+    "pasos": [
+      "Siéntate en la orilla del banco con una mancuerna sobre cada muslo.",
+      "Recuéstate llevando las mancuernas al pecho; apoya los pies firmes en el piso.",
+      "Junta ligeramente los omóplatos y mantén una pequeña curva natural en la espalda baja.",
+      "Empuja las mancuernas hacia arriba hasta estirar los brazos sin bloquear los codos.",
+      "Baja despacio hasta que los codos queden un poco por debajo del banco, a unos 45–60° del torso."
+    ],
+    "errores": [
+      "Abrir los codos a 90° del cuerpo: estresa el hombro.",
+      "Rebotar las mancuernas en el pecho o bajar sin control.",
+      "Despegar la cadera del banco para empujar más peso.",
+      "Chocar las mancuernas arriba y perder la tensión del pecho."
+    ],
+    "respiracion": "Inhala al bajar las mancuernas y exhala con fuerza al empujarlas hacia arriba.",
+    "articulaciones": ["hombro", "codo", "muneca"],
+    "sustitutos": [],
+    "cargaKg": [6, 12, 20],
+    "vista": "lateral",
+    "animacion": {
+      "duracionMs": 3200,
+      "apoyo": "espalda",
+      "agarre": "ambas",
+      "camara": 18,
+      "props": [{ "tipo": "banco", "x": 0, "z": [-72, 24], "alto": 40, "ancho": 28 }],
+      "base": {
+        "cuerpo": [-90, 0, 0],
+        "cabeza": 0,
+        "piernas": [-12, 12, 112, 0]
+      },
+      "keyframes": [
+        { "t": 0, "pose": { "brazos": [90, 62, 0, 0, 62] } },
+        { "t": 0.5, "pose": { "brazos": [-12, 62, 0, 96, 62] }, "ease": "inOut" },
+        { "t": 0.58, "pose": { "brazos": [-12, 62, 0, 96, 62] }, "ease": "linear" },
+        { "t": 0.95, "pose": { "brazos": [90, 62, 0, 0, 62] }, "ease": "out" }
+      ],
+      "activacion": [[0, 0.35], [0.5, 0.55], [0.6, 1], [0.95, 0.5], [1, 0.35]]
+    }
+  },
+  {
+    "id": "curl-biceps",
+    "nombre": "Curl de bíceps",
+    "zona": "brazos",
+    "musculosPrincipales": ["biceps"],
+    "musculosSecundarios": ["antebrazos"],
+    "nivel": "principiante",
+    "tipo": "fuerza",
+    "equipo": ["mancuernas"],
+    "pasos": [
+      "De pie, pies al ancho de la cadera y una mancuerna en cada mano, palmas al frente.",
+      "Pega los codos a los costados y mantén los hombros abajo y atrás.",
+      "Dobla los codos y sube las mancuernas hacia los hombros sin mover los brazos.",
+      "Aprieta el bíceps un instante arriba.",
+      "Baja en 2–3 segundos hasta estirar casi por completo."
+    ],
+    "errores": [
+      "Balancear el cuerpo o usar impulso de la espalda.",
+      "Adelantar los codos al subir: el hombro hace el trabajo.",
+      "Bajar rápido o recortar el recorrido.",
+      "Doblar las muñecas hacia atrás."
+    ],
+    "respiracion": "Exhala al subir la mancuerna e inhala mientras la bajas despacio.",
+    "articulaciones": ["codo", "muneca"],
+    "sustitutos": [],
+    "cargaKg": [4, 8, 14],
+    "vista": "lateral",
+    "animacion": {
+      "duracionMs": 2800,
+      "apoyo": "pies",
+      "agarre": "ambas",
+      "camara": 22,
+      "base": { "brazos": [0, 6, 0, 8, 0], "piernas": [0, 6, 0, 0] },
+      "keyframes": [
+        { "t": 0, "pose": { "brazos": [0, 6, 0, 8, 0] } },
+        { "t": 0.4, "pose": { "brazos": [8, 6, 0, 138, 0] }, "ease": "inOut" },
+        { "t": 0.5, "pose": { "brazos": [8, 6, 0, 138, 0] }, "ease": "linear" },
+        { "t": 1, "pose": { "brazos": [0, 6, 0, 8, 0] }, "ease": "inOut" }
+      ],
+      "activacion": [[0, 0.3], [0.4, 1], [0.5, 1], [1, 0.3]]
+    }
+  },
+  {
+    "id": "sentadilla-goblet",
+    "nombre": "Sentadilla goblet",
+    "zona": "piernas",
+    "musculosPrincipales": ["cuadriceps", "gluteos"],
+    "musculosSecundarios": ["isquiotibiales", "abdomen", "espalda_baja"],
+    "nivel": "principiante",
+    "tipo": "fuerza",
+    "equipo": ["mancuernas"],
+    "pasos": [
+      "Sujeta una mancuerna vertical con ambas manos, pegada al pecho.",
+      "Separa los pies un poco más que el ancho de la cadera, puntas ligeramente hacia afuera.",
+      "Lleva la cadera atrás y abajo como si te sentaras, con el pecho erguido.",
+      "Baja hasta que los muslos queden paralelos al piso o un poco más, con los talones apoyados.",
+      "Empuja el piso con todo el pie para subir, apretando los glúteos arriba."
+    ],
+    "errores": [
+      "Levantar los talones o cargar el peso en las puntas.",
+      "Dejar que las rodillas se vayan hacia adentro.",
+      "Redondear la espalda o dejar caer el pecho.",
+      "Separar la mancuerna del pecho."
+    ],
+    "respiracion": "Inhala al bajar manteniendo el abdomen firme y exhala al subir.",
+    "articulaciones": ["rodilla", "espalda_baja"],
+    "sustitutos": [],
+    "cargaKg": [8, 16, 26],
+    "vista": "lateral",
+    "animacion": {
+      "duracionMs": 3400,
+      "apoyo": "pies",
+      "agarre": "central",
+      "camara": 18,
+      "base": {
+        "brazos": [14, -14, 0, 150, 90],
+        "piernas": [0, 8, 0, 0],
+        "cabeza": 0
+      },
+      "keyframes": [
+        { "t": 0, "pose": { "cuerpo": [0, 0, 0], "torso": [0, 0, 0], "piernas": [0, 8, 0, 0], "cabeza": 0 } },
+        { "t": 0.48, "pose": { "cuerpo": [30, 0, 0], "torso": [4, 0, 0], "piernas": [112, 8, 112, 0], "cabeza": -26 }, "ease": "inOut" },
+        { "t": 0.56, "pose": { "cuerpo": [30, 0, 0], "torso": [4, 0, 0], "piernas": [112, 8, 112, 0], "cabeza": -26 }, "ease": "linear" },
+        { "t": 1, "pose": { "cuerpo": [0, 0, 0], "torso": [0, 0, 0], "piernas": [0, 8, 0, 0], "cabeza": 0 }, "ease": "inOut" }
+      ],
+      "activacion": [[0, 0.3], [0.48, 0.7], [0.6, 1], [1, 0.3]]
+    }
+  }
+]
