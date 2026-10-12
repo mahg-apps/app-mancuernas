@@ -115,21 +115,31 @@ export function solveSkeleton(p: Pose): Skeleton {
   return sk;
 }
 
+/** Altura de la superficie de apoyo: el banco si hay, si no el piso. */
+function surface(anim: ExerciseAnimation): number {
+  return anim.props?.find((p) => p.tipo === 'banco')?.alto ?? 0;
+}
+
 /** Desplazamiento que coloca al personaje sobre el suelo o el banco. */
 export function groundOffset(sk: Skeleton, anim: ExerciseAnimation): V3 {
   if (anim.apoyo === 'pies') {
     const pts = [sk.talon[-1], sk.talon[1], sk.punta[-1], sk.punta[1]];
     const minY = Math.min(...pts.map((p) => p[1]));
-    // Las puntas de los pies quedan fijas en el piso.
-    const cx = (sk.punta[-1][0] + sk.punta[1][0]) / 2;
-    const cz = (sk.punta[-1][2] + sk.punta[1][2]) / 2;
+    // Las puntas de los pies apoyados quedan fijas en el piso (si uno se levanta, no cuenta).
+    const planted = ([-1, 1] as Side[]).filter((s) => Math.min(sk.talon[s][1], sk.punta[s][1]) < minY + 4);
+    const cx = planted.reduce((a, s) => a + sk.punta[s][0], 0) / planted.length;
+    const cz = planted.reduce((a, s) => a + sk.punta[s][2], 0) / planted.length;
     return [-cx, 3 - minY, -cz];
   }
   if (anim.apoyo === 'gluteos') {
     return [0, 10, 0];
   }
-  const bench = anim.props?.find((p) => p.tipo === 'banco');
-  return [0, (bench?.alto ?? 40) + BODY.torsoGrosor / 2 - 1, 0];
+  if (anim.apoyo === 'hombros') {
+    // La parte alta de la espalda descansa sobre el banco (hip thrust) o el piso (puente).
+    const mid = scale(add(sk.hombro[-1], sk.hombro[1]), 0.5);
+    return [-mid[0], surface(anim) + BODY.torsoGrosor / 2 - 1 - mid[1], -mid[2]];
+  }
+  return [0, surface(anim) + BODY.torsoGrosor / 2 - 1, 0];
 }
 
 // ---------- Proyección y dibujo ----------
@@ -309,7 +319,9 @@ export function buildScene(
   if (hl) {
     const draw = (id: MuscleId, strength: number, color: string) => {
       const o = OVERLAYS[id];
+      const onlySide = anim.resaltarLado === 'derecha' ? -1 : anim.resaltarLado === 'izquierda' ? 1 : 0;
       for (const s of [-1, 1] as Side[]) {
+        if (onlySide && s !== onlySide && o.bone !== 'torso') continue;
         let a: V3;
         let b: V3;
         let m: M3;

@@ -86,9 +86,11 @@ export interface ExerciseAnimation {
   /** Duración de una repetición a velocidad 1×. */
   duracionMs: number;
   /** Qué parte del cuerpo se apoya: define cómo se coloca la figura en la escena. */
-  apoyo: 'pies' | 'gluteos' | 'espalda';
-  /** Qué manos sostienen mancuerna. `central`: una mancuerna con ambas manos. */
-  agarre: 'ambas' | 'derecha' | 'izquierda' | 'central';
+  apoyo: 'pies' | 'gluteos' | 'espalda' | 'hombros';
+  /** Qué manos sostienen mancuerna. `central`: una mancuerna con ambas manos; `ninguno`: sin peso. */
+  agarre: 'ambas' | 'derecha' | 'izquierda' | 'central' | 'ninguno';
+  /** Resalta solo los músculos de un lado (estiramientos y ejercicios a una pierna). */
+  resaltarLado?: 'derecha' | 'izquierda';
   /** Giro extra de cámara en grados para dar profundidad. */
   camara?: number;
   props?: Prop[];
@@ -110,8 +112,10 @@ export interface Exercise {
   nivel: Nivel;
   tipo: TipoEjercicio;
   equipo: Equipo[];
-  /** true si se trabaja un lado a la vez (las reps son por lado). */
+  /** true si se trabaja un lado a la vez (las reps o el tiempo son por lado). */
   unilateral?: boolean;
+  /** Calentamiento y estiramientos: duración en segundos (por lado si es unilateral). */
+  duracionSeg?: number;
   pasos: string[];
   errores: string[];
   respiracion: string;

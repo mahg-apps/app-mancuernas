@@ -1501,5 +1501,532 @@
         ]
       ]
     }
+  },
+  {
+    "id": "hip-thrust",
+    "nombre": "Hip thrust",
+    "zona": "gluteos",
+    "musculosPrincipales": [
+      "gluteos"
+    ],
+    "musculosSecundarios": [
+      "isquiotibiales",
+      "cuadriceps",
+      "espalda_baja"
+    ],
+    "nivel": "intermedio",
+    "tipo": "fuerza",
+    "equipo": [
+      "mancuernas",
+      "banco"
+    ],
+    "pasos": [
+      "Siéntate en el piso con la parte alta de la espalda (debajo de los omóplatos) apoyada en la orilla del banco.",
+      "Coloca una mancuerna sobre la cadera y sujétala con ambas manos. Pies apoyados, al ancho de la cadera.",
+      "Empuja con los talones y sube la cadera hasta que el torso quede paralelo al piso.",
+      "Aprieta los glúteos arriba 1 segundo, con la barbilla metida y las costillas abajo.",
+      "Baja la cadera con control sin llegar a sentarte."
+    ],
+    "errores": [
+      "Arquear la espalda baja arriba en lugar de apretar los glúteos.",
+      "Empujar con las puntas de los pies.",
+      "Pies demasiado lejos o cerca: las rodillas deben quedar a 90° arriba.",
+      "Mover el banco: apóyalo contra la pared."
+    ],
+    "respiracion": "Exhala al subir la cadera e inhala al bajarla.",
+    "articulaciones": [
+      "espalda_baja"
+    ],
+    "sustitutos": [
+      "puente-gluteo"
+    ],
+    "cargaKg": [
+      8,
+      16,
+      28
+    ],
+    "vista": "lateral",
+    "animacion": {
+      "duracionMs": 3200,
+      "apoyo": "hombros",
+      "agarre": "central",
+      "camara": 18,
+      "props": [
+        {
+          "tipo": "banco",
+          "x": 0,
+          "z": [
+            -34,
+            4
+          ],
+          "alto": 40,
+          "ancho": 60
+        }
+      ],
+      "base": {
+        "cabeza": 32,
+        "brazos": [
+          4,
+          -16,
+          0,
+          14,
+          90
+        ]
+      },
+      "keyframes": [
+        {
+          "t": 0,
+          "pose": {
+            "cuerpo": [
+              -55,
+              0,
+              0
+            ],
+            "piernas": [
+              73.9,
+              10,
+              104,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.22,
+          "pose": {
+            "cuerpo": [
+              -72,
+              0,
+              0
+            ],
+            "piernas": [
+              40.4,
+              10,
+              106.9,
+              0
+            ]
+          },
+          "ease": "in"
+        },
+        {
+          "t": 0.42,
+          "pose": {
+            "cuerpo": [
+              -90,
+              0,
+              0
+            ],
+            "piernas": [
+              0,
+              10,
+              92.7,
+              0
+            ]
+          },
+          "ease": "out"
+        },
+        {
+          "t": 0.52,
+          "pose": {
+            "cuerpo": [
+              -90,
+              0,
+              0
+            ],
+            "piernas": [
+              0,
+              10,
+              92.7,
+              0
+            ]
+          },
+          "ease": "linear"
+        },
+        {
+          "t": 0.76,
+          "pose": {
+            "cuerpo": [
+              -72,
+              0,
+              0
+            ],
+            "piernas": [
+              40.4,
+              10,
+              106.9,
+              0
+            ]
+          },
+          "ease": "in"
+        },
+        {
+          "t": 1,
+          "pose": {
+            "cuerpo": [
+              -55,
+              0,
+              0
+            ],
+            "piernas": [
+              73.9,
+              10,
+              104,
+              0
+            ]
+          },
+          "ease": "out"
+        }
+      ],
+      "activacion": [
+        [
+          0,
+          0.3
+        ],
+        [
+          0.42,
+          1
+        ],
+        [
+          0.52,
+          1
+        ],
+        [
+          1,
+          0.3
+        ]
+      ]
+    }
+  },
+  {
+    "id": "lenador",
+    "nombre": "Leñador",
+    "zona": "core",
+    "musculosPrincipales": [
+      "oblicuos",
+      "abdomen"
+    ],
+    "musculosSecundarios": [
+      "hombro_anterior",
+      "gluteos",
+      "cuadriceps"
+    ],
+    "nivel": "intermedio",
+    "tipo": "fuerza",
+    "equipo": [
+      "mancuernas"
+    ],
+    "unilateral": true,
+    "pasos": [
+      "De pie, pies un poco más abiertos que la cadera, sujeta una mancuerna con ambas manos.",
+      "Lleva la mancuerna arriba, por encima del hombro derecho, girando el torso hacia ese lado.",
+      "Baja la mancuerna en diagonal hacia el exterior de la rodilla izquierda, girando el torso y doblando las rodillas.",
+      "Gira el pie de atrás para acompañar el movimiento y mantén los brazos casi estirados.",
+      "Regresa arriba con control. Completa las reps y cambia de lado."
+    ],
+    "errores": [
+      "Mover solo los brazos sin girar el torso.",
+      "Redondear la espalda al bajar.",
+      "Bloquear las rodillas.",
+      "Hacerlo tan rápido que la mancuerna arrastre al cuerpo."
+    ],
+    "respiracion": "Exhala al bajar en diagonal e inhala al regresar arriba.",
+    "articulaciones": [
+      "espalda_baja",
+      "hombro"
+    ],
+    "sustitutos": [
+      "giros-rusos"
+    ],
+    "cargaKg": [
+      3,
+      6,
+      10
+    ],
+    "vista": "frontal",
+    "animacion": {
+      "duracionMs": 3000,
+      "apoyo": "pies",
+      "agarre": "central",
+      "camara": -18,
+      "base": {
+        "piernas": [
+          0,
+          13,
+          0,
+          0
+        ]
+      },
+      "keyframes": [
+        {
+          "t": 0,
+          "pose": {
+            "cuerpo": [
+              0,
+              0,
+              0
+            ],
+            "torso": [
+              0,
+              -10,
+              -38
+            ],
+            "brazos": [
+              150,
+              -30,
+              0,
+              8,
+              90
+            ],
+            "piernas": [
+              0,
+              13,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.42,
+          "pose": {
+            "cuerpo": [
+              16,
+              0,
+              0
+            ],
+            "torso": [
+              12,
+              10,
+              44
+            ],
+            "brazos": [
+              38,
+              -30,
+              0,
+              8,
+              90
+            ],
+            "piernas": [
+              36,
+              13,
+              42,
+              0
+            ]
+          },
+          "ease": "inOut"
+        },
+        {
+          "t": 0.52,
+          "pose": {
+            "cuerpo": [
+              16,
+              0,
+              0
+            ],
+            "torso": [
+              12,
+              10,
+              44
+            ],
+            "brazos": [
+              38,
+              -30,
+              0,
+              8,
+              90
+            ],
+            "piernas": [
+              36,
+              13,
+              42,
+              0
+            ]
+          },
+          "ease": "linear"
+        },
+        {
+          "t": 1,
+          "pose": {
+            "cuerpo": [
+              0,
+              0,
+              0
+            ],
+            "torso": [
+              0,
+              -10,
+              -38
+            ],
+            "brazos": [
+              150,
+              -30,
+              0,
+              8,
+              90
+            ],
+            "piernas": [
+              0,
+              13,
+              0,
+              0
+            ]
+          },
+          "ease": "inOut"
+        }
+      ],
+      "activacion": [
+        [
+          0,
+          0.3
+        ],
+        [
+          0.42,
+          1
+        ],
+        [
+          0.52,
+          0.9
+        ],
+        [
+          1,
+          0.3
+        ]
+      ]
+    }
+  },
+  {
+    "id": "estiramiento-cuadriceps",
+    "nombre": "Estiramiento de cuádriceps",
+    "zona": "piernas",
+    "musculosPrincipales": [
+      "cuadriceps"
+    ],
+    "musculosSecundarios": [],
+    "nivel": "principiante",
+    "tipo": "estiramiento",
+    "equipo": [],
+    "unilateral": true,
+    "duracionSeg": 30,
+    "pasos": [
+      "De pie, apóyate en una pared o silla si lo necesitas.",
+      "Dobla la rodilla derecha y toma el tobillo con la mano derecha detrás de ti.",
+      "Junta las rodillas y empuja la cadera ligeramente al frente hasta sentir el estiramiento en el muslo.",
+      "Mantén la postura respirando lento y luego cambia de pierna."
+    ],
+    "errores": [
+      "Separar la rodilla hacia afuera o adelante.",
+      "Arquear la espalda baja.",
+      "Jalar el tobillo con rebotes."
+    ],
+    "respiracion": "Respira lento y profundo; al exhalar, relaja un poco más el muslo.",
+    "articulaciones": [
+      "rodilla"
+    ],
+    "sustitutos": [],
+    "cargaKg": [
+      0,
+      0,
+      0
+    ],
+    "vista": "lateral",
+    "animacion": {
+      "duracionMs": 4400,
+      "apoyo": "pies",
+      "agarre": "ninguno",
+      "camara": -28,
+      "base": {
+        "piernaI": [
+          0,
+          5,
+          0,
+          0
+        ],
+        "brazoI": [
+          40,
+          28,
+          0,
+          12,
+          90
+        ],
+        "brazoD": [
+          -38,
+          4,
+          0,
+          22,
+          0
+        ]
+      },
+      "keyframes": [
+        {
+          "t": 0,
+          "pose": {
+            "piernaD": [
+              -2,
+              3,
+              146,
+              25
+            ],
+            "brazoD": [
+              -36,
+              4,
+              0,
+              20,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.5,
+          "pose": {
+            "piernaD": [
+              -12,
+              3,
+              154,
+              25
+            ],
+            "brazoD": [
+              -44,
+              4,
+              0,
+              18,
+              0
+            ]
+          },
+          "ease": "inOut"
+        },
+        {
+          "t": 1,
+          "pose": {
+            "piernaD": [
+              -2,
+              3,
+              146,
+              25
+            ],
+            "brazoD": [
+              -36,
+              4,
+              0,
+              20,
+              0
+            ]
+          },
+          "ease": "inOut"
+        }
+      ],
+      "activacion": [
+        [
+          0,
+          0.4
+        ],
+        [
+          0.5,
+          0.85
+        ],
+        [
+          1,
+          0.4
+        ]
+      ],
+      "resaltarLado": "derecha"
+    }
   }
 ]
