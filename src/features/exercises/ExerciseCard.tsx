@@ -1,12 +1,16 @@
 import { Link } from 'react-router-dom';
 import { Figure } from '../../animation/Figure';
-import { MUSCLE_NAME, NIVEL_NAME } from '../../data/muscles';
+import { ARTICULACION_NAME, MUSCLE_NAME, NIVEL_NAME } from '../../data/muscles';
+import { limitedJoints } from '../../lib/safety';
+import { useProfile } from '../../state/ProfileContext';
 import type { Exercise } from '../../types';
 
 /** Tarjeta con miniatura (pose de máximo esfuerzo), nombre y músculos principales. */
 export function ExerciseCard({ ex, compact = false }: { ex: Exercise; compact?: boolean }) {
   // Miniatura en el momento de mayor activación muscular.
   const peak = ex.animacion.activacion.reduce((a, b) => (b[1] > a[1] ? b : a))[0];
+  const { profile } = useProfile();
+  const cuidado = limitedJoints(ex, profile);
 
   return (
     <Link
@@ -22,9 +26,14 @@ export function ExerciseCard({ ex, compact = false }: { ex: Exercise; compact?: 
           {ex.musculosPrincipales.map((m) => MUSCLE_NAME[m]).join(' · ')}
         </p>
         <p className="mt-1 text-[13px] text-muted">
-          {NIVEL_NAME[ex.nivel]}
+          {ex.tipo === 'fuerza' ? NIVEL_NAME[ex.nivel] : `${ex.duracionSeg ?? 30} s${ex.unilateral ? ' por lado' : ''}`}
           {ex.equipo.includes('banco') && ' · Banco'}
         </p>
+        {cuidado.length > 0 && (
+          <p className="mt-1 inline-flex rounded-full bg-amber-500/15 px-2.5 py-0.5 text-[13px] font-medium text-amber-200">
+            ⚠ {cuidado.map((c) => ARTICULACION_NAME[c]).join(', ')}
+          </p>
+        )}
       </div>
     </Link>
   );

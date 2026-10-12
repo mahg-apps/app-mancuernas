@@ -4,8 +4,10 @@ import { Figure } from '../../animation/Figure';
 import { prefersReducedMotion } from '../../animation/useAnimationClock';
 import { BodyMap } from '../../body-map/BodyMap';
 import { IconBack, IconPause, IconPlay } from '../../components/Icons';
+import { SwapSheet } from '../../components/SwapSheet';
 import { getExercise } from '../../data/exercises';
 import { ARTICULACION_NAME, MUSCLE_NAME, NIVEL_NAME, OBJETIVO_NAME } from '../../data/muscles';
+import { limitedJoints, substitutes } from '../../lib/safety';
 import { formatWeight, PRESCRIPCION, suggestWeight } from '../../lib/training';
 import { useProfile } from '../../state/ProfileContext';
 import type { MuscleId } from '../../types';
@@ -20,6 +22,7 @@ export function ExerciseDetail() {
   const nav = useNavigate();
   const [playing, setPlaying] = useState(() => !prefersReducedMotion());
   const [speed, setSpeed] = useState(1);
+  const [swapping, setSwapping] = useState(false);
 
   if (!ex) {
     return (
@@ -38,7 +41,9 @@ export function ExerciseDetail() {
   const all = [...ex.musculosPrincipales, ...ex.musculosSecundarios];
   // El mapa muestra la cara del cuerpo donde están la mayoría de los músculos trabajados.
   const showBack = all.filter((m) => BACK.includes(m)).length > all.length / 2;
-  const cuidado = profile?.limitaciones.filter((l) => ex.articulaciones.includes(l)) ?? [];
+  const cuidado = limitedJoints(ex, profile);
+  const timed = ex.tipo !== 'fuerza';
+  const alternativas = cuidado.length ? substitutes(ex, profile, 3) : [];
 
   return (
     <div className="page">
@@ -49,16 +54,16 @@ export function ExerciseDetail() {
         <div className="min-w-0">
           <h1 className="h1 truncate">{ex.nombre}</h1>
           <p className="text-[15px] text-muted">
-            {NIVEL_NAME[ex.nivel]}
+            {timed ? (ex.tipo === 'calentamiento' ? 'Calentamiento' : 'Estiramiento') : NIVEL_NAME[ex.nivel]}
             {ex.unilateral && ' · Un lado a la vez'}
             {ex.equipo.includes('banco') && ' · Necesitas banco'}
           </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] md:items-start">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-start">
         {/* Animación */}
-        <div className="card overflow-hidden md:sticky md:top-4">
+        <div className="card overflow-hidden lg:sticky lg:top-4">
           <div className="aspect-[4/3] w-full bg-gradient-to-b from-surface2 to-surface">
             <Figure exercise={ex} playing={playing} speed={speed} className="h-full w-full" />
           </div>
@@ -80,30 +85,67 @@ export function ExerciseDetail() {
         {/* Información */}
         <div className="space-y-5">
           {cuidado.length > 0 && (
-            <div className="rounded-2xl border border-amber-500/40 bg-amber-500/10 p-4 text-[15px]">
-              <strong>Precaución:</strong> este ejercicio carga {cuidado.map((c) => ARTICULACION_NAME[c].toLowerCase()).join(' y ')}, que marcaste como zona a cuidar. Usa poco peso y detente si sientes dolor.
+            <div className="space-y-3 rounded-2xl border border-amber-500/40 bg-amber-500/10 p-4 text-[15px]">
+              <p>
+                <strong>Precaución:</strong> este ejercicio carga {cuidado.map((c) => ARTICULACION_NAME[c].toLowerCase()).join(' y ')}, que
+                marcaste como zona a cuidar. Usa poco peso y detente si sientes dolor.
+              </p>
+              {alternativas.length > 0 && (
+                <div>
+                  <p className="mb-1 font-semibold">Alternativas más seguras:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {alternativas.map((a) => (
+                      <Link key={a.id} to={`/ejercicio/${a.id}`} className="chip border-amber-500/40 text-ink">
+                        {a.nombre}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
-          <section className="card grid grid-cols-3 divide-x divide-line/60 text-center">
-            <div className="p-3">
-              <p className="text-[13px] text-muted">Series</p>
-              <p className="text-2xl font-bold">{pres.series}</p>
-            </div>
-            <div className="p-3">
-              <p className="text-[13px] text-muted">Reps{ex.unilateral ? ' / lado' : ''}</p>
-              <p className="text-2xl font-bold">{pres.reps}</p>
-            </div>
-            <div className="p-3">
-              <p className="text-[13px] text-muted">Peso sugerido</p>
-              <p className="text-2xl font-bold">{profile ? formatWeight(peso, profile.unidad) : '—'}</p>
-            </div>
-            <p className="col-span-3 border-t border-line/60 px-3 py-2 text-[13px] text-muted">
-              Objetivo: {profile ? OBJETIVO_NAME[profile.objetivo] : '—'}
-              {rest && ` · descanso ${rest.series} s entre series`}
-              {ex.equipo.includes('mancuernas') && ex.animacion.agarre !== 'central' && ' · peso por mancuerna'}
-            </p>
-          </section>
+          {timed ? (
+            <section className="card grid grid-cols-2 divide-x divide-line/60 text-center">
+              <div className="p-3">
+                <p className="text-[13px] text-muted">Duración{ex.unilateral ? ' / lado' : ''}</p>
+                <p className="text-2xl font-bold">{ex.duracionSeg ?? 30} s</p>
+              </div>
+              <div className="p-3">
+                <p className="text-[13px] text-muted">Equipo</p>
+                <p className="text-2xl font-bold">Ninguno</p>
+              </div>
+              <p className="col-span-2 border-t border-line/60 px-3 py-2 text-[13px] text-muted">
+                {ex.tipo === 'calentamiento' ? 'Se incluye al inicio de tus rutinas.' : 'Se incluye al final de tus rutinas.'}
+              </p>
+            </section>
+          ) : (
+            <section className="card grid grid-cols-3 divide-x divide-line/60 text-center">
+              <div className="p-3">
+                <p className="text-[13px] text-muted">Series</p>
+                <p className="text-2xl font-bold">{pres.series}</p>
+              </div>
+              <div className="p-3">
+                <p className="text-[13px] text-muted">Reps{ex.unilateral ? ' / lado' : ''}</p>
+                <p className="text-2xl font-bold">{pres.reps}</p>
+              </div>
+              <div className="p-3">
+                <p className="text-[13px] text-muted">Peso sugerido</p>
+                <p className="text-2xl font-bold">{profile ? formatWeight(peso, profile.unidad) : '—'}</p>
+              </div>
+              <p className="col-span-3 border-t border-line/60 px-3 py-2 text-[13px] text-muted">
+                Objetivo: {profile ? OBJETIVO_NAME[profile.objetivo] : '—'}
+                {rest && ` · descanso ${rest.series} s entre series`}
+                {ex.equipo.includes('mancuernas') && ex.animacion.agarre !== 'central' && ' · peso por mancuerna'}
+              </p>
+            </section>
+          )}
+
+          {!timed && (
+            <button className="btn-ghost w-full" onClick={() => setSwapping(true)}>
+              Cambiar ejercicio
+            </button>
+          )}
 
           <section className="card flex items-center gap-4 p-4">
             <BodyMap
@@ -166,6 +208,17 @@ export function ExerciseDetail() {
           </section>
         </div>
       </div>
+      {swapping && (
+        <SwapSheet
+          exercise={ex}
+          profile={profile}
+          onClose={() => setSwapping(false)}
+          onPick={(e) => {
+            setSwapping(false);
+            nav(`/ejercicio/${e.id}`);
+          }}
+        />
+      )}
     </div>
   );
 }

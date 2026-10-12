@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
 import { loadProfile, saveProfile } from '../db';
+import { normalizeProfile } from '../lib/training';
 import type { Profile } from '../types';
 
 interface Ctx {
@@ -16,7 +17,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     loadProfile()
-      .then((p) => setProfile(p ?? null))
+      .then((p) => setProfile(p ? normalizeProfile(p) : null))
       .catch(() => setProfile(null))
       .finally(() => setLoading(false));
   }, []);

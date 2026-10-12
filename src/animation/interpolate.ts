@@ -1,14 +1,18 @@
-import type { Ease, ExerciseAnimation, Pose, PoseInput } from '../types';
+import type { ArmAngles, Ease, ExerciseAnimation, Pose, PoseInput } from '../types';
 
 export const DEFAULT_POSE: Pose = {
   cuerpo: [0, 0, 0],
   torso: [0, 0, 0],
   cabeza: 0,
-  brazoD: [0, 8, 0, 8, 90],
-  brazoI: [0, 8, 0, 8, 90],
+  hombrosY: 0,
+  brazoD: [0, 8, 0, 8, 90, 0],
+  brazoI: [0, 8, 0, 8, 90, 0],
   piernaD: [0, 5, 0, 0],
   piernaI: [0, 5, 0, 0],
 };
+
+/** Completa la muñeca (opcional en los datos) para poder interpolar. */
+const arm = (a: ArmAngles): ArmAngles => [a[0], a[1], a[2], a[3], a[4], a[5] ?? 0];
 
 /** Combina una pose parcial sobre una pose completa. */
 export function resolvePose(input: PoseInput | undefined, over: Pose = DEFAULT_POSE): Pose {
@@ -16,6 +20,7 @@ export function resolvePose(input: PoseInput | undefined, over: Pose = DEFAULT_P
     cuerpo: [...over.cuerpo],
     torso: [...over.torso],
     cabeza: over.cabeza,
+    hombrosY: over.hombrosY,
     brazoD: [...over.brazoD],
     brazoI: [...over.brazoI],
     piernaD: [...over.piernaD],
@@ -25,12 +30,13 @@ export function resolvePose(input: PoseInput | undefined, over: Pose = DEFAULT_P
   if (input.cuerpo) p.cuerpo = [...input.cuerpo];
   if (input.torso) p.torso = [...input.torso];
   if (input.cabeza !== undefined) p.cabeza = input.cabeza;
+  if (input.hombrosY !== undefined) p.hombrosY = input.hombrosY;
   if (input.brazos) {
-    p.brazoD = [...input.brazos];
-    p.brazoI = [...input.brazos];
+    p.brazoD = arm(input.brazos);
+    p.brazoI = arm(input.brazos);
   }
-  if (input.brazoD) p.brazoD = [...input.brazoD];
-  if (input.brazoI) p.brazoI = [...input.brazoI];
+  if (input.brazoD) p.brazoD = arm(input.brazoD);
+  if (input.brazoI) p.brazoI = arm(input.brazoI);
   if (input.piernas) {
     p.piernaD = [...input.piernas];
     p.piernaI = [...input.piernas];
@@ -56,8 +62,9 @@ function lerpPose(a: Pose, b: Pose, k: number): Pose {
     cuerpo: lerpArr(a.cuerpo, b.cuerpo, k),
     torso: lerpArr(a.torso, b.torso, k),
     cabeza: a.cabeza + (b.cabeza - a.cabeza) * k,
-    brazoD: lerpArr(a.brazoD, b.brazoD, k),
-    brazoI: lerpArr(a.brazoI, b.brazoI, k),
+    hombrosY: a.hombrosY + (b.hombrosY - a.hombrosY) * k,
+    brazoD: lerpArr(a.brazoD as number[], b.brazoD as number[], k) as ArmAngles,
+    brazoI: lerpArr(a.brazoI as number[], b.brazoI as number[], k) as ArmAngles,
     piernaD: lerpArr(a.piernaD, b.piernaD, k),
     piernaI: lerpArr(a.piernaI, b.piernaI, k),
   };

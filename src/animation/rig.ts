@@ -46,16 +46,18 @@ export interface Skeleton {
 
 function solveArm(torsoM: M3, shoulder: V3, s: Side, a: ArmAngles) {
   const [flex, abd, rot, codo, prono] = a;
+  const muneca = a[5] ?? 0;
   const mUpper = mul(torsoM, mul(rz(s * abd), mul(rx(-flex), ry(s * rot))));
   const elbow = add(shoulder, apply(mUpper, [0, -BODY.brazo, 0]));
   const mFore = mul(mUpper, mul(rx(-codo), ry(s * prono)));
   const wrist = add(elbow, apply(mFore, [0, -BODY.antebrazo, 0]));
-  const hand = add(wrist, apply(mFore, [0, -BODY.mano, 0]));
+  const mHand = muneca ? mul(mFore, rx(-muneca)) : mFore;
+  const hand = add(wrist, apply(mHand, [0, -BODY.mano, 0]));
   return {
     upper: { a: shoulder, b: elbow, m: mUpper },
     fore: { a: elbow, b: wrist, m: mFore },
     hand,
-    handM: mFore,
+    handM: mHand,
   };
 }
 
@@ -96,7 +98,7 @@ export function solveSkeleton(p: Pose): Skeleton {
   sk.punta = {} as Skeleton['punta'];
 
   for (const s of [-1, 1] as Side[]) {
-    const shoulder = apply(torsoM, [s * BODY.hombroAncho, BODY.hombroAltura, 0]);
+    const shoulder = apply(torsoM, [s * BODY.hombroAncho, BODY.hombroAltura + p.hombrosY, 0]);
     const arm = solveArm(torsoM, shoulder, s, s === -1 ? p.brazoD : p.brazoI);
     sk.hombro[s] = shoulder;
     sk.brazo[s] = arm.upper;
@@ -122,6 +124,12 @@ function surface(anim: ExerciseAnimation): number {
 
 /** Desplazamiento que coloca al personaje sobre el suelo o el banco. */
 export function groundOffset(sk: Skeleton, anim: ExerciseAnimation): V3 {
+  if (anim.apoyo === 'pies' && anim.ancla) {
+    // Un pie fijo sobre su superficie (piso o banco): step-up, búlgara, zancada atrás.
+    const s: Side = anim.ancla === 'derecho' ? -1 : 1;
+    const minY = Math.min(sk.talon[s][1], sk.punta[s][1]);
+    return [-sk.punta[s][0], (anim.anclaAlto ?? 0) + 3 - minY, -sk.punta[s][2]];
+  }
   if (anim.apoyo === 'pies') {
     const pts = [sk.talon[-1], sk.talon[1], sk.punta[-1], sk.punta[1]];
     const minY = Math.min(...pts.map((p) => p[1]));
@@ -132,7 +140,8 @@ export function groundOffset(sk: Skeleton, anim: ExerciseAnimation): V3 {
     return [-cx, 3 - minY, -cz];
   }
   if (anim.apoyo === 'gluteos') {
-    return [0, 10, 0];
+    // Sentado en el piso o en el banco.
+    return [0, surface(anim) + 10, 0];
   }
   if (anim.apoyo === 'hombros') {
     // La parte alta de la espalda descansa sobre el banco (hip thrust) o el piso (puente).

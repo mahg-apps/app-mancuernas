@@ -59,6 +59,38 @@ export function Settings() {
       <div className="card space-y-6 p-5">
         <h2 className="text-xl font-bold">Limitaciones</h2>
         <LimitationsFields profile={p} onChange={setP} />
+        <div className="space-y-2">
+          <p className="font-semibold">Ejercicios que cargan esas zonas</p>
+          <div className="grid grid-cols-2 gap-2">
+            {(
+              [
+                ['advertir', 'Mostrar con aviso ⚠'],
+                ['ocultar', 'Ocultarlos'],
+              ] as const
+            ).map(([v, label]) => (
+              <button key={v} className="chip px-2" aria-pressed={p.modoLimitaciones === v} onClick={() => setP({ ...p, modoLimitaciones: v })}>
+                {label}
+              </button>
+            ))}
+          </div>
+          <p className="text-[14px] text-muted">En ambos casos, "Cambiar ejercicio" te propone alternativas que las respetan.</p>
+        </div>
+      </div>
+
+      <div className="card space-y-3 p-5">
+        <h2 className="text-xl font-bold">Calentamiento y estiramientos</h2>
+        <p className="text-[15px] text-muted">Se arman solos según los músculos de cada rutina. Puedes cambiarlo en cada rutina o antes de empezar.</p>
+        {(
+          [
+            ['calentamiento', 'Calentamiento al inicio (3–5 min)'],
+            ['estiramientos', 'Estiramientos al final'],
+          ] as const
+        ).map(([k, label]) => (
+          <label key={k} className="flex min-h-[52px] cursor-pointer items-center justify-between gap-3 rounded-2xl bg-surface2 px-4">
+            <span>{label}</span>
+            <input type="checkbox" className="h-6 w-6 accent-[#ff7a3d]" checked={p[k]} onChange={(e) => setP({ ...p, [k]: e.target.checked })} />
+          </label>
+        ))}
       </div>
 
       <div className="card space-y-5 p-5">

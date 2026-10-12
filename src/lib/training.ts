@@ -82,8 +82,22 @@ export function defaultProfile(): Profile {
     objetivo: 'tonificar',
     nivel: 'principiante',
     limitaciones: [],
+    modoLimitaciones: 'advertir',
+    calentamiento: true,
+    estiramientos: true,
     descansos: structuredClone(DESCANSOS_DEFAULT),
     creado: now,
     actualizado: now,
   };
+}
+
+/** Completa perfiles guardados con versiones anteriores de la app. */
+export function normalizeProfile(p: Partial<Profile>): Profile {
+  const d = defaultProfile();
+  return {
+    ...d,
+    ...p,
+    descansos: { ...d.descansos, ...(p.descansos ?? {}) },
+    limitaciones: p.limitaciones ?? [],
+  } as Profile;
 }

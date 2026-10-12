@@ -5,6 +5,8 @@ import { IconFlip } from '../../components/Icons';
 import { EXERCISES, exercisesForMuscle } from '../../data/exercises';
 import { MUSCLES, MUSCLE_NAME } from '../../data/muscles';
 import { useIsTablet } from '../../hooks/useMediaQuery';
+import { visibleExercises } from '../../lib/safety';
+import { useProfile } from '../../state/ProfileContext';
 import type { MuscleId } from '../../types';
 import { ExerciseCard } from '../exercises/ExerciseCard';
 
@@ -16,18 +18,20 @@ export function BodyPage() {
   const selected = (params.get('m') as MuscleId | null) ?? null;
   const [side, setSide] = useState<BodySide>(selected && BACK_MUSCLES.includes(selected) ? 'posterior' : 'frontal');
 
+  const { profile } = useProfile();
+  const pool = useMemo(() => visibleExercises(profile, EXERCISES.filter((e) => e.tipo === 'fuerza')), [profile]);
   const available = useMemo(() => {
     const s = new Set<MuscleId>();
-    EXERCISES.forEach((e) => [...e.musculosPrincipales, ...e.musculosSecundarios].forEach((m) => s.add(m)));
+    pool.forEach((e) => [...e.musculosPrincipales, ...e.musculosSecundarios].forEach((m) => s.add(m)));
     return s;
-  }, []);
+  }, [pool]);
 
   const select = (m: MuscleId) => {
     const next = selected === m ? null : m;
     setParams(next ? { m: next } : {}, { replace: true });
   };
 
-  const result = selected ? exercisesForMuscle(selected) : null;
+  const result = selected ? exercisesForMuscle(selected, pool) : null;
 
   return (
     <div className="page">

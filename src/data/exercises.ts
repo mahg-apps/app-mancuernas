@@ -10,10 +10,10 @@ export function getExercise(id: string): Exercise | undefined {
 }
 
 /** Ejercicios que trabajan un músculo: primero donde es principal, luego secundario. */
-export function exercisesForMuscle(m: MuscleId): { principal: Exercise[]; secundario: Exercise[] } {
+export function exercisesForMuscle(m: MuscleId, pool: Exercise[] = EXERCISES): { principal: Exercise[]; secundario: Exercise[] } {
   return {
-    principal: EXERCISES.filter((e) => e.musculosPrincipales.includes(m)),
-    secundario: EXERCISES.filter((e) => e.musculosSecundarios.includes(m)),
+    principal: pool.filter((e) => e.musculosPrincipales.includes(m)),
+    secundario: pool.filter((e) => e.musculosSecundarios.includes(m)),
   };
 }
 
@@ -21,7 +21,7 @@ export function exercisesForMuscle(m: MuscleId): { principal: Exercise[]; secund
 export function normalize(s: string): string {
   return s
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .trim();
 }

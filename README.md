@@ -48,8 +48,11 @@ La animación se define con keyframes de ángulos articulares (en grados):
 
 Otras opciones de `animacion`:
 
-- `apoyo`: `pies`, `gluteos` o `espalda`.
-- `agarre`: `ambas`, `derecha`, `izquierda` o `central` (una mancuerna con las dos manos).
+- `apoyo`: `pies`, `gluteos` (sentado en piso o banco), `espalda` (acostado) u `hombros` (espalda alta en banco o piso).
+- `ancla` / `anclaAlto`: deja fijo un solo pie, opcionalmente sobre un banco (step-up, búlgara).
+- `agarre`: `ambas`, `derecha`, `izquierda`, `central` (una mancuerna con las dos manos) o `ninguno`.
+- `resaltarLado`: ilumina solo los músculos de un lado.
+- `hombrosY` en la pose eleva los hombros; un sexto valor en los brazos flexiona la muñeca.
 - `props`: elementos como un banco.
 - `activacion`: curva `[t, intensidad]` que ilumina los músculos principales.
 
@@ -57,7 +60,9 @@ Otras opciones de `animacion`:
 
 - **Etapa 1 (lista):** perfil inicial, mapa corporal, 10 ejercicios animados, lista y detalle,
   rutinas simples y modo entrenamiento continuo.
-- **Etapa 2:** 40+ ejercicios, calentamiento y estiramientos, limitaciones aplicadas y sustitutos.
+- **Etapa 2 (lista):** 41 ejercicios de fuerza, 6 de calentamiento y 7 estiramientos animados; calentamiento y
+  estiramientos automáticos en cada rutina (se pueden omitir); limitaciones aplicadas (avisar u ocultar) y
+  botón "Cambiar ejercicio" con sustitutos seguros (`src/lib/safety.ts`).
 - **Etapa 3:** generador de rutinas, arrastre táctil, plan semanal, pantalla "Hoy", voz.
 - **Etapa 4:** registro real de series, progresión automática, gráficas, exportar e importar en JSON.
 

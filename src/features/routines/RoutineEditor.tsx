@@ -3,9 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Figure } from '../../animation/Figure';
 import { IconBack, IconCheck, IconPlus } from '../../components/Icons';
 import { EXERCISES, getExercise } from '../../data/exercises';
-import { MUSCLE_NAME, ZONAS } from '../../data/muscles';
+import { ARTICULACION_NAME, MUSCLE_NAME, ZONAS } from '../../data/muscles';
 import { getRoutine, newId, saveRoutine } from '../../db';
 import { estimateMinutes } from '../../lib/routine';
+import { limitedJoints, visibleExercises } from '../../lib/safety';
 import { useProfile } from '../../state/ProfileContext';
 import type { Routine, Zona } from '../../types';
 
@@ -19,6 +20,8 @@ export function RoutineEditor() {
   const [ids, setIds] = useState<string[]>([]);
   const [zona, setZona] = useState<Zona | null>(null);
   const [original, setOriginal] = useState<Routine | null>(null);
+  const [cal, setCal] = useState<boolean | undefined>(undefined);
+  const [est, setEst] = useState<boolean | undefined>(undefined);
 
   useEffect(() => {
     if (isNew) return;
@@ -27,6 +30,8 @@ export function RoutineEditor() {
       setOriginal(r);
       setNombre(r.nombre);
       setIds(r.items.map((i) => i.exerciseId));
+      setCal(r.calentamiento);
+      setEst(r.estiramientos);
     });
   }, [id, isNew, nav]);
 
@@ -46,10 +51,12 @@ export function RoutineEditor() {
       nombre,
       predefinida: false,
       items: ids.map((exerciseId) => ({ exerciseId })),
+      calentamiento: cal,
+      estiramientos: est,
       creado: original?.creado ?? Date.now(),
       actualizado: Date.now(),
     }),
-    [ids, nombre, original],
+    [ids, nombre, original, cal, est],
   );
 
   const save = async () => {
@@ -58,7 +65,9 @@ export function RoutineEditor() {
     nav('/rutinas');
   };
 
-  const pool = EXERCISES.filter((e) => !zona || e.zona === zona);
+  const pool = visibleExercises(profile, EXERCISES).filter((e) => e.tipo === 'fuerza' && (!zona || e.zona === zona));
+  const calOn = cal ?? profile?.calentamiento ?? true;
+  const estOn = est ?? profile?.estiramientos ?? true;
 
   return (
     <div className="page">
@@ -91,7 +100,10 @@ export function RoutineEditor() {
                   return (
                     <li key={exId} className="flex items-center gap-2 rounded-2xl bg-surface2 py-1 pl-4 pr-1">
                       <span className="w-6 font-bold text-accent">{i + 1}</span>
-                      <span className="min-w-0 flex-1 truncate font-medium">{e?.nombre}</span>
+                      <span className="min-w-0 flex-1 truncate font-medium">
+                        {e?.nombre}
+                        {e && limitedJoints(e, profile).length > 0 && <span className="ml-1 text-amber-300">⚠</span>}
+                      </span>
                       <button className="btn px-0 text-muted" onClick={() => move(i, -1)} disabled={i === 0} aria-label="Subir">
                         ▲
                       </button>
@@ -106,6 +118,18 @@ export function RoutineEditor() {
                 })}
               </ol>
             )}
+          </div>
+
+          <div className="space-y-2">
+            {[
+              { label: 'Calentamiento al inicio', on: calOn, set: setCal },
+              { label: 'Estiramientos al final', on: estOn, set: setEst },
+            ].map((t) => (
+              <label key={t.label} className="flex min-h-[52px] cursor-pointer items-center justify-between gap-3 rounded-2xl bg-surface px-4">
+                <span>{t.label}</span>
+                <input type="checkbox" className="h-6 w-6 accent-[#ff7a3d]" checked={t.on} onChange={(ev) => t.set(ev.target.checked)} />
+              </label>
+            ))}
           </div>
 
           <button className="btn-primary w-full text-lg" onClick={save} disabled={!ids.length}>
@@ -141,6 +165,9 @@ export function RoutineEditor() {
                   <div className="min-w-0 flex-1">
                     <p className="font-semibold leading-snug">{e.nombre}</p>
                     <p className="truncate text-[14px] text-muted">{e.musculosPrincipales.map((m) => MUSCLE_NAME[m]).join(' · ')}</p>
+                    {limitedJoints(e, profile).length > 0 && (
+                      <p className="text-[13px] text-amber-200">⚠ {limitedJoints(e, profile).map((c) => ARTICULACION_NAME[c]).join(', ')}</p>
+                    )}
                   </div>
                   <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${on ? 'bg-accent text-[#1a0d05]' : 'bg-surface2 text-muted'}`}>
                     {on ? <IconCheck width={20} height={20} /> : <IconPlus width={20} height={20} />}

@@ -29,8 +29,8 @@ export type Vista = 'frontal' | 'lateral';
 
 // ---------- Animación ----------
 
-/** Brazo: [flexión hombro, abducción hombro, rotación externa hombro, flexión codo, pronación] en grados. */
-export type ArmAngles = [number, number, number, number, number];
+/** Brazo: [flexión hombro, abducción hombro, rotación externa hombro, flexión codo, pronación, flexión muñeca?] en grados. */
+export type ArmAngles = [number, number, number, number, number, number?];
 /** Pierna: [flexión cadera, abducción cadera, flexión rodilla, flexión plantar tobillo] en grados. */
 export type LegAngles = [number, number, number, number];
 /** [pitch (inclinación adelante), roll (lateral), yaw (giro)] en grados. */
@@ -41,6 +41,8 @@ export interface Pose {
   cuerpo: Tri; // orientación global de la pelvis
   torso: Tri; // [flexión, inclinación lateral, rotación] respecto a la pelvis
   cabeza: number; // flexión del cuello
+  /** Elevación de los hombros (encogimientos), en unidades de escena. */
+  hombrosY: number;
   brazoD: ArmAngles;
   brazoI: ArmAngles;
   piernaD: LegAngles;
@@ -52,6 +54,7 @@ export interface PoseInput {
   cuerpo?: Tri;
   torso?: Tri;
   cabeza?: number;
+  hombrosY?: number;
   brazos?: ArmAngles;
   brazoD?: ArmAngles;
   brazoI?: ArmAngles;
@@ -89,6 +92,9 @@ export interface ExerciseAnimation {
   apoyo: 'pies' | 'gluteos' | 'espalda' | 'hombros';
   /** Qué manos sostienen mancuerna. `central`: una mancuerna con ambas manos; `ninguno`: sin peso. */
   agarre: 'ambas' | 'derecha' | 'izquierda' | 'central' | 'ninguno';
+  /** Pie que queda fijo (en vez de los dos) y altura de su superficie (p. ej. un banco). */
+  ancla?: 'derecho' | 'izquierdo';
+  anclaAlto?: number;
   /** Resalta solo los músculos de un lado (estiramientos y ejercicios a una pierna). */
   resaltarLado?: 'derecha' | 'izquierda';
   /** Giro extra de cámara en grados para dar profundidad. */
@@ -151,6 +157,11 @@ export interface Profile {
   objetivo: Objetivo;
   nivel: Nivel;
   limitaciones: Articulacion[];
+  /** Qué hacer con los ejercicios que cargan una zona limitada. */
+  modoLimitaciones: 'advertir' | 'ocultar';
+  /** Incluir por defecto calentamiento y estiramientos en las rutinas. */
+  calentamiento: boolean;
+  estiramientos: boolean;
   descansos: Record<Objetivo, Descanso>;
   creado: number;
   actualizado: number;
@@ -170,6 +181,9 @@ export interface Routine {
   nombre: string;
   predefinida: boolean;
   items: RoutineItem[];
+  /** Si se omiten, se usa lo que diga el perfil. */
+  calentamiento?: boolean;
+  estiramientos?: boolean;
   creado: number;
   actualizado: number;
 }
